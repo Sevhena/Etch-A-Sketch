@@ -1,0 +1,24 @@
+html, body {
+    height: 100%;
+    margin: 0; padding: 0;  /* to avoid scrollbars */
+    overflow: hidden;
+}
+
+#grid {
+    display: flex;
+    flex-direction: column;
+    margin: calc(10vh / 2) auto;
+    border: 1px solid black;
+    height: 90vh;
+    width: 90vw;
+}
+
+.row {
+    display: flex;
+    flex: auto;
+}
+
+.block {
+    border: 1px solid black;
+    flex: auto;
+}
