@@ -28,5 +28,6 @@ html, body {
 .block {
     border: 1px solid black;
     flex: auto;
+    background-color: rgb(255, 255, 255);
 }
 
