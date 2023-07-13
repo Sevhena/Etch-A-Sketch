@@ -69,7 +69,7 @@ function colourBlock(block) {
         block.classList.add('coloured');
         block.style.backgroundColor = getColour();
         colourDict[row][column] = getUsableRGB(block.style.backgroundColor).map(value => {
-            return value * 0.1;
+            return Math.floor(value * 0.1);
         });
     }
 }
