@@ -97,12 +97,14 @@ dimensionsBtn.addEventListener('click', (event) => {
         return;
     }
 
+    if (!size) {return;}
+
     while (grid.firstChild) {
         grid.removeChild(grid.firstChild);
     }
     createGrid(size);
 })
 
-// window.addEventListener("beforeunload", (event) => {
-//     event.returnValue = "Are you sure you want to leave the page? All progress will be lost.";
-// });
+window.onbeforeunload = function(event) {
+    return "Are you sure you want to leave the page? All progress will be lost.";
+};
