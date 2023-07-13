@@ -4,11 +4,15 @@ function createGrid(size) {
 
         const row = document.createElement('div');
         row.classList.toggle('row');
+        row.setAttribute('data-row', "" + i);
+        colourDict.push([]);
 
         for (let j = 0; j < size; j++) {
             const block = document.createElement('div');
             block.classList.toggle('block');
+            row.setAttribute('data-column', "" + j);
             row.appendChild(block);
+            colourDict[i].push("rgb(255,255,255)");
         }
 
         grid.appendChild(row);
@@ -18,7 +22,7 @@ function createGrid(size) {
 
     blocks.forEach(block => {
 
-        block.addEventListener('mouseover', (event) => colour(event.target));
+        block.addEventListener('mouseover', (event) => colourBlock(event.target));
     });
 }
 
@@ -30,18 +34,49 @@ function getColour() {
     return `rgb(${r},${g},${b})`;
 }
 
-function colour(block) {
+function getUsableRGB(colour) {
+    let rgbValues = colour.slice(4);
+    rgbValues = rgbValues.slice(0, rgbValues.length-1);
+    rgbValues = rgbValues.split(",");
+
+    rgbValues = rgbValues.map(value => {
+        return Math.floor(parseInt(value.trim()));
+    });
+
+    return rgbValues;
+}
+
+function darkenBlock(colour, darkeningRatio) {
+    const prevColour = getUsableRGB(colour);
+    const r = prevColour[0] - darkeningRatio[0] >= 0 ? prevColour[0] - darkeningRatio[0] : 0;
+    const g = prevColour[1] - darkeningRatio[1] >= 0 ? prevColour[1] - darkeningRatio[1] : 0;
+    const b = prevColour[2] - darkeningRatio[2] >= 0 ? prevColour[2] - darkeningRatio[2] : 0;
+
+    console.log(`rgb(${r},${g},${b})`)
+
+    return `rgb(${r},${g},${b})`;
+}
+
+function colourBlock(block) {
+
+    const row = parseInt(block.parentElement.getAttribute('data-row'));
+    const column = parseInt(block.getAttribute('data-column'));
+
     if (block.classList.contains("coloured")) {
-        return;
+        block.style.backgroundColor = darkenBlock(block.style.backgroundColor, colourDict[row][column]);
     }
     else {
         block.classList.add('coloured');
         block.style.backgroundColor = getColour();
+        colourDict[row][column] = getUsableRGB(block.style.backgroundColor).map(value => {
+            return value * 0.1;
+        });
     }
 }
 
 function reset() {
     blocks.forEach((block) => block.style.backgroundColor = 'white');
+    colourDict = [];
 }
 
 const grid = document.querySelector("#grid");
@@ -49,6 +84,7 @@ const dimensionsBtn = document.querySelector('#dimensions');
 const resetBtn = document.querySelector('#reset');
 
 let blocks;
+let colourDict = [];
 createGrid(16); //Default grid size
 
 resetBtn.addEventListener('click', reset);
